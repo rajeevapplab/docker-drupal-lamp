@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  php-apache-environment:
+    container_name: dockers
+    build:
+        context: ./Docker
+        dockerfile: Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./www:/var/www/html/
+    ports:
+      - 80:80
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: test
+        MYSQL_DATABASE: drupal
+        MYSQL_ROOT_USER: root
+        MYSQL_PASSWORD: test
+    ports:
+        - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+         - '8080:80'
+    restart: always
+    environment:
+      PMA_HOST: db
+    depends_on:
+        - db
